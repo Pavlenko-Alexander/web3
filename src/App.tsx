@@ -3,13 +3,18 @@ import { WalletConnect } from './components/WalletConnect';
 import { SendTxForm } from './components/SendTxForm';
 import { TxHistory } from './components/TxHistory';
 import { useAccount } from 'wagmi';
+import { Toaster } from 'react-hot-toast'
+import './index.css'
 
 function App() {
   const { isConnected } = useAccount();
   const [txHashes, setTxHashes] = useState<`0x${string}`[]>([]);
 
   const handleNewTransaction = (hash: `0x${string}`) => {
-    setTxHashes((prev) => [hash, ...prev]);
+    setTxHashes((prev) => {
+      if (prev.includes(hash)) return prev;
+      return [hash, ...prev];
+    });
   };
 
   return (
@@ -26,6 +31,7 @@ function App() {
           </>
         )}
       </main>
+      <Toaster position="top-right" />
     </div>
   );
 }

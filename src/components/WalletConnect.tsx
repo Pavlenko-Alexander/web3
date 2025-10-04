@@ -31,32 +31,26 @@ export function WalletConnect() {
   const { disconnect } = useDisconnect();
   const ethPrice = useEthPrice();
 
+  const balance = balanceData ? Number(formatUnits(balanceData.value, balanceData.decimals)) : 0;
+
   const balanceInUsd =
-    balanceData && ethPrice ? Number(formatUnits(balanceData.value, balanceData.decimals)) * ethPrice : 0;
+    balanceData && ethPrice ? balance * ethPrice : 0;
 
   if (isConnected && balanceData) {
     return (
-      <div>
-        <p>
-          Адреса: <strong>{address}</strong>
-        </p>
-        <p>
-          Баланс:{" "}
-          <strong>
-            {formatUnits(balanceData.value, balanceData.decimals)} {balanceData.symbol}
-          </strong>
-        </p>
-        <p>
-          В доларах (USD): <strong>${balanceInUsd.toFixed(2)}</strong>
-        </p>
+      <div className="wallet-info">
+        <p className="wallet-info__address">Адреса: <strong>{address}</strong></p>
+        <p>Баланс: <strong>{balance.toFixed(4)} {balanceData.symbol}</strong></p>
+        <p>В доларах (USD): <strong>${balanceInUsd.toFixed(4)}</strong></p>
         <button onClick={() => disconnect()}>Відключити гаманець</button>
       </div>
     );
   }
 
   return (
-    <button onClick={() => connect({ connector: injected() })}>
+    <button className="connect-btn" onClick={() => connect({ connector: injected() })}>
       Підключити гаманець
     </button>
   );
 }
+
